@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PropFind</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard-logo i {
+            font-size: 2rem;
+        }
+        
+        .dashboard-logo h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-tabs {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .tab-content {
+            padding: 20px;
+        }
+        
+        .tab-panel {
+            display: none;
+        }
+        
+        .tab-panel.active {
+            display: block;
+        }
+        
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .property-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .property-image {
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .property-image i {
+            font-size: 3rem;
+            color: #ccc;
+        }
+        
+        .property-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .type-sale { background: #e74c3c; }
+        .type-rent { background: #3498db; }
+        .type-lease { background: #2ecc71; }
+        
+        .property-info {
+            padding: 20px;
+        }
+        
+        .property-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .property-location {
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .property-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .property-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .no-properties {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .no-properties i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .properties-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div class="dashboard-logo">
+                    <i class="fas fa-home"></i>
+                    <h1>PropFind Dashboard</h1>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="user-name">Welcome, User</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="stat-number" id="total-properties">0</div>
+                    <div class="stat-label">Total Properties</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-number" id="for-sale">0</div>
+                    <div class="stat-label">For Sale</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="stat-number" id="for-rent">0</div>
+                    <div class="stat-label">For Rent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="stat-number" id="total-views">0</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="switchTab('my-properties')">
+                        <i class="fas fa-home"></i> My Properties
+                    </button>
+                    <button class="tab-button" onclick="switchTab('add-property')">
+                        <i class="fas fa-plus"></i> Add Property
+                    </button>
+                    <button class="tab-button" onclick="switchTab('profile')">
+                        <i class="fas fa-user"></i> Profile
+                    </button>
+                </div>
+                
+                <div class="tab-content">
+                    <div id="my-properties" class="tab-panel active">
+                        <h3>My Properties</h3>
+                        <div id="my-properties-grid" class="properties-grid">
+                            <!-- Properties will be loaded here -->
+                        </div>
+                        <div id="no-my-properties" class="no-properties" style="display: none;">
+                            <i class="fas fa-home"></i>
+                            <h3>No properties found</h3>
+                            <p>You haven't added any properties yet. Click "Add Property" to get started.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="add-property" class="tab-panel">
+                        <h3>Add New Property</h3>
+                        <form id="property-form" class="property-form" enctype="multipart/form-data">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="title">Property Title*</label>
+                                    <input type="text" id="title" required placeholder="Beautiful 3BR House">
+                                </div>
+                                <div class="form-group">
+                                    <label for="property-type">Listing Type*</label>
+                                    <select id="property-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="sale">For Sale</option>
+                                        <option value="rent">For Rent</option>
+                                        <option value="lease">For Lease</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="price">Price ($)*</label>
+                                    <input type="number" id="price" required placeholder="500000">
+                                </div>
+                                <div class="form-group">
+                                    <label for="location">Location*</label>
+                                    <input type="text" id="location" required placeholder="New York, NY">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="bedrooms">Bedrooms</label>
+                                    <input type="number" id="bedrooms" placeholder="3">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bathrooms">Bathrooms</label>
+                                    <input type="number" id="bathrooms" placeholder="2">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="area">Area (sq ft)</label>
+                                    <input type="number" id="area" placeholder="2500">
+                                </div>
+                                <div class="form-group">
+                                    <label for="year-built">Year Built</label>
+                                    <input type="number" id="year-built" placeholder="2020">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">Description*</label>
+                                <textarea id="description" required placeholder="Describe your property in detail..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="features">Features (comma-separated)</label>
+                                <input type="text" id="features" placeholder="Pool, Garage, Garden, Modern Kitchen">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="image-file">Property Image (optional)</label>
+                                <input type="file" id="image-file" accept="image/*">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Property
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div id="profile" class="tab-panel">
+                        <h3>Profile Settings</h3>
+                        <form id="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profile-first-name">First Name</label>
+                                    <input type="text" id="profile-first-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-last-name">Last Name</label>
+                                    <input type="text" id="profile-last-name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profile-email">Email Address</label>
+                                <input type="email" id="profile-email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profile-phone">Phone Number</label>
+                                <input type="tel" id="profile-phone" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Profile
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
